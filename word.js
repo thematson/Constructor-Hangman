@@ -5,7 +5,6 @@ var Word = function(theWord){
     this.keyWord = [];
 
     this.addLetters = function(l) {
-        console.log(this.keyWord.guess);
 
         if (this.keyWord.guess === false) {
             this.keyWord.push('_ ');

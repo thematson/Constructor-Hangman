@@ -7,16 +7,6 @@ var Letter = function(letter, space) {
     this.guess = false;
     this.letter = letter;
 
-    // this.showLetter = function() {
-    //     if (this.guess === false) {
-    //         this.letter = '_ ';
-    //         // console.log('false is ' + this.letter);
-            
-    //     } 
-    //     else {
-            
-    //     }
-    // };
 };
 
 
