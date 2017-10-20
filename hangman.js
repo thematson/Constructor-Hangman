@@ -1,20 +1,25 @@
+//requirements
 var Word = require("./word");
 var inquirer = require("inquirer");
 var prompt = inquirer.createPromptModule();
+
+//let's get some variables
+//you have wrong guesses available
 var guessesLeft = 8;
 var lettersGuessed = [];
+//the answers
 var wordArray = ["burrito", "quesadilla", "guacamole", "chimichanga", "chorizo", "salsa verde", "chile con queso", "tacos al pastor"];
+//let's pick a random letter
 var random = Math.floor(Math.random() * 8);
 var answerWord = wordArray[random];
 var blankWord = [];
 var answerLetterArray = answerWord.split("");
 var hangmanWord = new Word(answerWord);
 
-
+//the function from the word constructor
 for (var j = 0; j<answerLetterArray.length; j++){
     hangmanWord.addLetters(answerLetterArray[j]);
 }
-
 
 for (var k = 0; k<hangmanWord.keyWord.length; k++) {
     if (hangmanWord.keyWord[k].letter !== " ") {
@@ -23,15 +28,16 @@ for (var k = 0; k<hangmanWord.keyWord.length; k++) {
         blankWord.push(" ");
     }
 }
-
+console.log("");
 console.log(blankWord.join("  "));
 
+//game play
 function game(){
     prompt([
         {
             type: 'input',
             name: 'letter',
-            message: "Please guess a letter!"
+            message: "Please guess a letter! (Hint: it's Mexican/Tex-Mex food)"
         }
 
     ])
@@ -48,7 +54,6 @@ function game(){
                         if (blankWord.toString() == answerLetterArray.toString()) {
                             console.log(blankWord.join('  '));                            
                             console.log('you win');
-                            // winner();
                         }
                         }
                     }
@@ -60,23 +65,8 @@ function game(){
                 console.log("NO!!!!! Number of Wrong Guesses Remaining : " + guessesLeft);
                 console.log(blankWord.join('  '));
                 if (guessesLeft === 0) {
-                    prompt([
-                        {
-                            type: 'confirm',
-                            name: 'keepPlaying',
-                            message: 'No more guesses left :(. Would you like to play again?',
-                            default: false
-                        }
-                    ]).then(function(user) {
-                        if(user.keepPlaying===true){
-                            guessesLeft = 8;
-                            lettersGuessed = [];
-                            console.log('game was called feom 104');
-                            game();
-                        } else {
-                            console.log("Thanks for playing bozo");
-                        } 
-                    });
+                    //if no guesses left.. call this function 
+                    noGuessesLeft();
                 }
             };
 
@@ -93,28 +83,36 @@ function game(){
                 console.log(blankWord.join('  '));                
                 
                 if (guessesLeft === 0) {
-                    prompt([
-                        {
-                            type: 'confirm',
-                            name: 'keepPlaying',
-                            message: 'No more guesses left :(. Would you like to play again?',
-                            default: false
-                        }
-                    ]).then(function(user) {
-                        if(user.keepPlaying){
-                            guessesLeft = 8;
-                            lettersGuessed = [];
-                            console.log('game was called from 135');
-                            game();
-                        } else {
-                            console.log("Thanks for playing bozo");
-                        } 
-                    });
+                    //if no guesses left.. call this function 
+                    noGuessesLeft();
                 }
             }
-            game();
+            if (guessesLeft > 0) {
+                game();
+            }    
         }
     });
 }
-console.log('game was called from 152');
+console.log('');
 game();
+function noGuessesLeft() {
+    prompt([
+        {
+            type: 'confirm',
+            name: 'keepPlaying',
+            message: 'No more guesses left :(. Would you like to play again?',
+            default: false
+        }
+    ]).then(function(user) {
+        if (user.keepPlaying === true) {
+            guessesLeft = 8;
+            lettersGuessed = [];
+            console.log('');
+            game();
+        }
+        else {
+            console.log("Thanks for playing bozo");
+            process.exit();
+        }
+    });
+}
